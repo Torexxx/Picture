@@ -21,19 +21,15 @@ const modals = () => {
     //  }
 
     trigger.forEach((item) => {
-     
       item.addEventListener("click", (e) => {
-        
         if (e.target) {
           e.preventDefault();
         }
-
         closeAllModals();
-        document.body.style.marginRight = scrollCalc() + 'px' ;
+        document.body.style.marginRight = scrollCalc() + 'px';
         modal.style.display = "block";
         document.body.classList.add("modal-open");
         if (item.classList.contains("fixed-gift")) {
-          debugger
           item.remove();
         }
       });
