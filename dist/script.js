@@ -1628,8 +1628,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var modals = function modals() {
+  var btnPressed = false;
+
   function bindModal(triggerSelector, modalSelector, closeSelector) {
-    var closeClickOverlay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+    var destroy = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     var trigger = document.querySelectorAll(triggerSelector),
         modal = document.querySelector(modalSelector),
         close = document.querySelector(closeSelector),
@@ -1639,8 +1641,9 @@ var modals = function modals() {
       windows.forEach(function (item) {
         item.style.display = "none";
         document.body.classList.remove("modal-open");
+        item.classList.add('animated', 'fadeIn');
       });
-    } // function checkModals() {
+    } // function checkModals()  {
     //     oneOfTheModalsIsOpen = Array.prototype.some.call(windows, (item => {
     //          return item.style.display === 'block';
     //       })) 
@@ -1653,19 +1656,20 @@ var modals = function modals() {
           e.preventDefault();
         }
 
+        btnPressed = true;
         closeAllModals();
         document.body.style.marginRight = Object(_utils_scrollCalc__WEBPACK_IMPORTED_MODULE_2__["default"])() + 'px';
         modal.style.display = "block";
         document.body.classList.add("modal-open");
 
-        if (item.classList.contains("fixed-gift")) {
-          debugger;
-          item.remove();
+        if (destroy) {
+          console.log(item.parent);
+          item.parentNode.removeChild(item);
         }
       });
     });
     modal.addEventListener("click", function (e) {
-      if (e.target === close || e.target === modal && closeClickOverlay) {
+      if (e.target === close || e.target === modal) {
         closeAllModals();
         document.body.style.marginRight = '0px';
         modal.style.display = "none";
@@ -1677,8 +1681,7 @@ var modals = function modals() {
     setTimeout(function () {
       var display;
       var modalWindow = document.querySelector(selector);
-      var windows = document.querySelectorAll("[data-modal]");
-      windows.forEach(function (item) {
+      document.querySelectorAll("[data-modal]").forEach(function (item) {
         if (getComputedStyle(item).display !== 'none') {
           display = 'block';
         }
@@ -1690,10 +1693,21 @@ var modals = function modals() {
     }, time);
   }
 
-  showModalByTime('.fixed-gift', 3000);
+  function openByScroll(selector) {
+    window.addEventListener('scroll', function () {
+      var scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+
+      if (!btnPressed && window.pageYOffset + document.documentElement.clientHeight >= scrollHeight) {
+        document.querySelector(selector).click();
+      }
+    });
+  }
+
+  showModalByTime('.fixed-gift', 40000);
   bindModal(".button-design", ".popup-design", ".popup-design .popup-close");
   bindModal(".button-consultation", ".popup-consultation", ".popup-consultation .popup-close");
-  bindModal(".fixed-gift", ".popup-gift", ".popup-gift .popup-close");
+  bindModal(".fixed-gift", ".popup-gift", ".popup-gift .popup-close", true);
+  openByScroll(".fixed-gift");
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (modals);
