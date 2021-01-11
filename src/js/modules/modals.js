@@ -39,7 +39,6 @@ const modals = () => {
         document.body.classList.add("modal-open");
     
         if (destroy) {
-          console.log(item.parent)
           item.parentNode.removeChild(item);
         }
       });
@@ -64,7 +63,7 @@ const modals = () => {
             display = 'block';
           }
         })
-        if (!display) {
+        if (!display && modalWindow) {
           modalWindow.click();
         }
       }, time)
