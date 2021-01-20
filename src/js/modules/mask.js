@@ -36,7 +36,6 @@ const mask = (selector) => {
                 this.value = '';
             }
         } else {
-            debugger
             setCursorPosition(this.value.length, this);
         }
     };
