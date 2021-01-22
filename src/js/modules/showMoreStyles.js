@@ -1,19 +1,48 @@
-const showMoreStyles = (trigger, styles ) => {
-    const cards = document.querySelectorAll(styles);
-    const button = document.querySelector(trigger);
+import { getResourse } from "../services/requests";
 
-    cards.forEach(item => {
-        item.classList.add('animated', 'fadeInUp')
+const showMoreStyles = (trigger, wrapper) => {
+
+  const btn = document.querySelector(trigger);
+// const cards = document.querySelectorAll(styles);
+
+  // cards.forEach(item => {
+  //     item.classList.add('animated', 'fadeInUp')
+  // })
+
+  // btn.addEventListener('click', () => {
+  //     cards.forEach(item => {
+  //         item.classList.remove('hidden-lg', 'hidden-md', 'hidden-sm', 'hidden-xs');
+  //         item.classList.add('col-sm-3', 'col-sm-offset-0', 'col-xs-10', 'col-xs-offset-1');
+  //     })
+
+  //     btn.remove();
+  // })
+
+  btn.addEventListener("click", function() {
+     
+    getResourse("assets/db.json")
+    .then(res => createCards(res.styles))
+    .catch(err =>  console.error(err))
+
+    this.remove();
+  });
+
+  
+  function createCards(response) {
+    response.forEach(({src, title, link}) => {
+        let card = `
+        <div class="animated fadeInUp col-sm-3 col-sm-offset-0 col-xs-10 col-xs-offset-1">
+            <div class="styles-block">
+                <img src=${src} alt="style">
+                <h4>${title}</h4>
+                <a href="${link}">Подробнее</a>
+            </div>
+        </div> 
+    `
+    document.querySelector(wrapper).insertAdjacentHTML('beforeend', card);
+    
     })
-
-    button.addEventListener('click', () => {
-        cards.forEach(item => {
-            item.classList.remove('hidden-lg', 'hidden-md', 'hidden-sm', 'hidden-xs');
-            item.classList.add('col-sm-3', 'col-sm-offset-0', 'col-xs-10', 'col-xs-offset-1');
-        })
-
-        button.remove();
-    })
-}
+  }
+};
 
 export default showMoreStyles;
