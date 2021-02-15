@@ -4,7 +4,8 @@ const forms = () => {
 
     const forms = document.querySelectorAll('form'),
           inputs = document.querySelectorAll('input'),
-          upload = document.querySelectorAll('[name="upload"]');
+          upload = document.querySelectorAll('[name="upload"]'),
+          selects = forms
 
     let message = {
         loading: 'Загрузка...',
@@ -20,9 +21,13 @@ const forms = () => {
         question: 'assets/question.php'
     };
 
-    function clearInputs() {
+    function clearInputs(select) {
         inputs.forEach(item => item.value = '');
         upload.forEach(item => item.previousElementSibling.textContent = 'Файл не выбран');
+
+        if (select) {
+            select.options.forEach(option => option.selected = '');
+        }
     }
 
     upload.forEach(item => {
@@ -40,6 +45,7 @@ const forms = () => {
     })
 
     forms.forEach(form => form.addEventListener('submit', (e) => {
+        
         e.preventDefault();
 
         let statusMessage = document.createElement('div');
@@ -62,10 +68,17 @@ const forms = () => {
             textMessage.textContent = message.loading;
             statusMessage.appendChild(textMessage);
 
-            
             const formData = new FormData(form);
-            let api;
 
+            form.querySelectorAll('select').forEach((item) => {
+                formData.append(item.id, item.value);
+                clearInputs(item);
+            })
+         
+            let api;
+          
+         
+         
             form.closest('.popup-design') || form.classList.contains('calc_form') ? api = path.designer : api = path.question;
 
             postData(api, formData)

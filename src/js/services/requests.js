@@ -1,5 +1,5 @@
 const postData = async (url, data) => {
-    debugger
+
     let res = await fetch(url, {
           method: "POST",
           body: data
